@@ -1,7 +1,8 @@
 import { Model, Schema, model } from 'mongoose'
 import { IUser } from './interfaces'
 
-type UserModel = Model<IUser, object>
+type UserModel = Model<IUser, Record<string, unknown>>
+
 const userSchema = new Schema<IUser>(
   {
     id: {
