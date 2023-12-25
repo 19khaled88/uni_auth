@@ -1,10 +1,7 @@
 import { NextFunction, Request, Response, json } from "express";
 import { userService } from "./service";
-import ApiError from "../../../errors/ApiError";
-
 
 const createUser = async(req:Request,res:Response,next:NextFunction)=>{
-    console.log(req.body)
     try {
       
         const response = await userService.createUser(req.body)
@@ -21,6 +18,6 @@ const createUser = async(req:Request,res:Response,next:NextFunction)=>{
     }
 }
 
-export default {
+export const userController = {
     createUser
 }
