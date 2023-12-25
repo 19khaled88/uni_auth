@@ -21,11 +21,7 @@ const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         });
     }
     catch (error) {
-        console.log(error);
         next(error);
-        // res.status(400).json({
-        //     err:error
-        // })
     }
 });
 exports.userController = {

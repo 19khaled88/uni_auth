@@ -1,5 +1,4 @@
 import { AnyZodObject } from "zod";
-import { userService } from "../modules/users/service";
 import { NextFunction, Request, Response } from "express";
 
 const validateRequest = (schema: AnyZodObject) => async (req: Request, res: Response, next: NextFunction): Promise<void> => {

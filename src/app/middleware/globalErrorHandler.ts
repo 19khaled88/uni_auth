@@ -36,6 +36,12 @@ const GlobalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
         statusCode = simplifiedError.statusCode;
         message = simplifiedError.message;
         errorMessage = simplifiedError.errorMessage;
+    } else if (err?.code === 11000) {
+        message = 'Duplicate error happened. Document already exists!'
+        errorMessage = [{
+            path: '',
+            message: "Document already exists!"
+        }]
     }
     else if (err instanceof Error) {
         message = err?.message;

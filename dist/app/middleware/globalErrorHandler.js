@@ -35,6 +35,13 @@ const GlobalErrorHandler = (err, req, res, next) => {
         message = simplifiedError.message;
         errorMessage = simplifiedError.errorMessage;
     }
+    else if ((err === null || err === void 0 ? void 0 : err.code) === 11000) {
+        message = 'Duplicate error happened. Document already exists!';
+        errorMessage = [{
+                path: '',
+                message: "Document already exists!"
+            }];
+    }
     else if (err instanceof Error) {
         message = err === null || err === void 0 ? void 0 : err.message;
         errorMessage = (err === null || err === void 0 ? void 0 : err.message) ?
