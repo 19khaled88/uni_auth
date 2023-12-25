@@ -17,7 +17,7 @@ app.use('/api/v1/user',userRouter)
 
 
 app.get('/', (req: Request, res: Response) => {
-  res.json({ message: 'hello' })
+  res.json({ message: 'auth service for university management' })
 })
 
 app.use(GlobalErrorHandler)

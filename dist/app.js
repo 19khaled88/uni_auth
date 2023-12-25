@@ -15,7 +15,7 @@ app.use(express_1.default.urlencoded({ extended: true }));
 //routes
 app.use('/api/v1/user', route_1.default);
 app.get('/', (req, res) => {
-    res.json({ message: 'hello' });
+    res.json({ message: 'auth service for university management' });
 });
 app.use(globalErrorHandler_1.default);
 exports.default = app;
