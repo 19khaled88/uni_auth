@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = __importDefault(require("../../config"));
 const ApiError_1 = __importDefault(require("../../errors/ApiError"));
 const handleValidationError_1 = __importDefault(require("../../errors/handleValidationError"));
+const zod_1 = require("zod");
+const zodErrorValidation_1 = require("../../errors/zodErrorValidation");
 const GlobalErrorHandler = (err, req, res, next) => {
     let statusCode = 500;
     let message = 'something wrong';
@@ -26,6 +28,12 @@ const GlobalErrorHandler = (err, req, res, next) => {
                     message: err === null || err === void 0 ? void 0 : err.message
                 }
             ] : [];
+    }
+    else if (err instanceof zod_1.ZodError) {
+        const simplifiedError = (0, zodErrorValidation_1.handleZodError)(err);
+        statusCode = simplifiedError.statusCode;
+        message = simplifiedError.message;
+        errorMessage = simplifiedError.errorMessage;
     }
     else if (err instanceof Error) {
         message = err === null || err === void 0 ? void 0 : err.message;
