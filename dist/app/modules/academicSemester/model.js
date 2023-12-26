@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AcademicSemester = void 0;
-const mongoose_1 = require("mongoose");
-const interface_1 = require("./interface");
-const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const http_status_1 = __importDefault(require("http-status"));
+const mongoose_1 = require("mongoose");
+const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
+const interface_1 = require("./interface");
 const academicSemesterSchema = new mongoose_1.Schema({
     title: {
         type: String,

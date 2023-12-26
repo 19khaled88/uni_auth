@@ -9,18 +9,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const validateRequest = (schema) => (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        yield schema.parseAsync({
-            body: req.body,
-            query: req.query,
-            params: req.params,
-            cookies: req.cookies,
-        });
-        return next();
-    }
-    catch (error) {
-        next(error);
-    }
+exports.pagenationElement = void 0;
+const pagenationElement = (req) => __awaiter(void 0, void 0, void 0, function* () {
+    var _a, _b;
+    const paginationOptions = {
+        page: Number(req.query.page),
+        limit: Number(req.query.limit),
+        sortBy: (_a = req.query.sortBy) === null || _a === void 0 ? void 0 : _a.toString(),
+        sortOrder: (_b = req.query.sortOrder) === null || _b === void 0 ? void 0 : _b.toString(),
+    };
+    return paginationOptions;
 });
-exports.default = validateRequest;
+exports.pagenationElement = pagenationElement;

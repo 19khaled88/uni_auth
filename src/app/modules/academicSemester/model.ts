@@ -1,8 +1,7 @@
-import { Schema, model } from 'mongoose'
-import { AcademicSemesterModel, IAcademicSemester, month } from './interface'
-import ApiError from '../../../errors/ApiError'
 import status from 'http-status'
-import { NextFunction } from 'express'
+import { Schema, model } from 'mongoose'
+import ApiError from '../../../errors/ApiError'
+import { AcademicSemesterModel, IAcademicSemester, month } from './interface'
 
 
 const academicSemesterSchema = new Schema<IAcademicSemester>(

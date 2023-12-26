@@ -3,3 +3,5 @@ export const academicSemesterTitleCodeMapper: { [key: string]: string } = {
   Summer: '02',
   Fall: '03',
 }
+
+

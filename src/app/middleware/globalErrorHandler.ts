@@ -5,15 +5,12 @@ import handleValidationError from "../../errors/handleValidationError"
 import IGenericErrorMessage from "../../errors/interface"
 import { ZodError } from "zod"
 import { handleZodError } from "../../errors/zodErrorValidation"
-
-
+import castError from "../../errors/castError"
 
 const GlobalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
-
     let statusCode = 500
     let message = 'something wrong'
     let errorMessage: IGenericErrorMessage[] = []
-
 
     if (err?.name === 'ValidationError') {
         const simplifiedError = handleValidationError(err);
@@ -42,6 +39,11 @@ const GlobalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
             path: '',
             message: "Document already exists!"
         }]
+    } else if(err?.name === 'CastError'){
+        const simplifiedError = castError(err)
+        statusCode = simplifiedError.statusCode;
+        message = simplifiedError.message;
+        errorMessage = simplifiedError.errorMessages;
     }
     else if (err instanceof Error) {
         message = err?.message;
@@ -59,7 +61,7 @@ const GlobalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
         stack: config.env !== 'production' ? err?.stack : undefined
     })
 
-    next()
+    
 }
 
 export default GlobalErrorHandler;

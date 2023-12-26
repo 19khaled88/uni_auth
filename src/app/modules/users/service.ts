@@ -5,11 +5,8 @@ import { generateUserId } from "./utils";
 
 
 const createUser = async(user:IUser):Promise<IUser | null>=>{
-
     const id =await generateUserId()
-
     user.id = id
-
     if(!user.password){
         user.password = config.default_password as string
     }
@@ -19,7 +16,6 @@ const createUser = async(user:IUser):Promise<IUser | null>=>{
     }
     return res
 }
-
 
 export const userService = {
     createUser

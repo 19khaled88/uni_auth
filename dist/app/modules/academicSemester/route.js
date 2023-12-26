@@ -8,5 +8,9 @@ const validateRequest_1 = __importDefault(require("../../middleware/validateRequ
 const controller_1 = require("./controller");
 const validation_1 = require("./validation");
 const router = (0, express_1.default)();
+router.get('/single-semester/:id', controller_1.academicSemesterController.singleSemester);
+router.put('/update-semester/:id', (0, validateRequest_1.default)(validation_1.AcademicSemesterZodValidation.updateSemesterZodSchema), controller_1.academicSemesterController.updateSemester);
+router.delete('/delete-semester/:id', controller_1.academicSemesterController.deleteSemester);
 router.post('/create-ac-semester', (0, validateRequest_1.default)(validation_1.AcademicSemesterZodValidation.createSemesterZodSchema), controller_1.academicSemesterController.createAcademicSememster);
+router.get('/all-semester', controller_1.academicSemesterController.allSemester);
 exports.default = router;

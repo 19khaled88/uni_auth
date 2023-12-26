@@ -8,6 +8,7 @@ const ApiError_1 = __importDefault(require("../../errors/ApiError"));
 const handleValidationError_1 = __importDefault(require("../../errors/handleValidationError"));
 const zod_1 = require("zod");
 const zodErrorValidation_1 = require("../../errors/zodErrorValidation");
+const castError_1 = __importDefault(require("../../errors/castError"));
 const GlobalErrorHandler = (err, req, res, next) => {
     let statusCode = 500;
     let message = 'something wrong';
@@ -42,6 +43,12 @@ const GlobalErrorHandler = (err, req, res, next) => {
                 message: "Document already exists!"
             }];
     }
+    else if ((err === null || err === void 0 ? void 0 : err.name) === 'CastError') {
+        const simplifiedError = (0, castError_1.default)(err);
+        statusCode = simplifiedError.statusCode;
+        message = simplifiedError.message;
+        errorMessage = simplifiedError.errorMessages;
+    }
     else if (err instanceof Error) {
         message = err === null || err === void 0 ? void 0 : err.message;
         errorMessage = (err === null || err === void 0 ? void 0 : err.message) ?
@@ -56,6 +63,5 @@ const GlobalErrorHandler = (err, req, res, next) => {
         errorMessage,
         stack: config_1.default.env !== 'production' ? err === null || err === void 0 ? void 0 : err.stack : undefined
     });
-    next();
 };
 exports.default = GlobalErrorHandler;
