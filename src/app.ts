@@ -43,4 +43,24 @@ app.use((req:Request,res:Response,next:NextFunction)=>{
   })
   next()
 })
+// const academicSemester ={
+//   code:"01",
+//   year:2020
+// }
+
+// const studentId=async()=>{
+//   const studentId =await generateStudentId(academicSemester)
+//   console.log(studentId)
+// }
+// const facultyId=async()=>{
+//   const facultyId = await generateFacultyId()
+//   console.log(facultyId)
+// }
+// const adminId=async()=>{
+//   const adminId = await generateAdminId()
+//   console.log(adminId)
+// }
+// studentId()
+// facultyId()
+// adminId()
 export default app

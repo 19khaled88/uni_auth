@@ -1,11 +1,17 @@
 import config from "../../../config";
 import { IUser } from "./interfaces";
 import { User } from "./model";
-import { generateUserId } from "./utils";
+import { generateUserId, generate_Student_Id } from "./utils";
 
 
 const createUser = async(user:IUser):Promise<IUser | null>=>{
-    const id =await generateUserId()
+    console.log(user.role)
+
+    const id = await generateUserId()
+    // if(user.role === 'student'){
+    //     const id = await generate_Student_Id()
+    //     user.id = id
+    // }
     user.id = id
     if(!user.password){
         user.password = config.default_password as string

@@ -17,7 +17,12 @@ const config_1 = __importDefault(require("../../../config"));
 const model_1 = require("./model");
 const utils_1 = require("./utils");
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
+    console.log(user.role);
     const id = yield (0, utils_1.generateUserId)();
+    // if(user.role === 'student'){
+    //     const id = await generate_Student_Id()
+    //     user.id = id
+    // }
     user.id = id;
     if (!user.password) {
         user.password = config_1.default.default_password;
