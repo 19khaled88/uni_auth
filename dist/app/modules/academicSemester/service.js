@@ -27,11 +27,10 @@ exports.academicSemesterService = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const paginationCalculate_1 = require("../../../helpers/paginationCalculate");
-const constants_1 = require("../../../shared/constants");
-const constants_2 = require("./constants");
+const constants_1 = require("./constants");
 const model_1 = require("./model");
 const createAcademicSemester = (data) => __awaiter(void 0, void 0, void 0, function* () {
-    if (constants_2.academicSemesterTitleCodeMapper[data.title] !== data.code) {
+    if (constants_1.academicSemesterTitleCodeMapper[data.title] !== data.code) {
         throw new ApiError_1.default(http_status_1.default.CONFLICT, 'Semester code not match the semester year');
     }
     const res = yield model_1.AcademicSemester.create(data);
@@ -102,7 +101,7 @@ const updateSemester = (id, payload) => __awaiter(void 0, void 0, void 0, functi
     if (!isExist) {
         throw new ApiError_1.default(400, 'This Semester not exist');
     }
-    if (payload.title != undefined && payload.code != undefined && constants_2.academicSemesterTitleCodeMapper[payload.title] !== payload.code) {
+    if (payload.title != undefined && payload.code != undefined && constants_1.academicSemesterTitleCodeMapper[payload.title] !== payload.code) {
         throw new ApiError_1.default(http_status_1.default.CONFLICT, 'Semester code not match the semester year');
     }
     const response = yield model_1.AcademicSemester.findByIdAndUpdate(id, payload, { new: true, runValidators: true });

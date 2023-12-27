@@ -17,6 +17,7 @@ const constants_1 = require("../../../shared/constants");
 const pick_1 = __importDefault(require("../../../shared/pick"));
 const service_1 = require("./service");
 const http_status_1 = __importDefault(require("http-status"));
+const constants_2 = require("./constants");
 const createAcademicFaculty = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const response = yield service_1.academicFacultyService.createAcademicFaculty(req.body);
@@ -41,7 +42,7 @@ const allFaculties = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         // }
         // const paginationRes = await pagenationElement(req)
         const paginationRes = (0, pick_1.default)(req.query, constants_1.paginationFields);
-        const filter = (0, pick_1.default)(req.query, constants_1.filterFields);
+        const filter = (0, pick_1.default)(req.query, constants_2.filterFields);
         const response = yield service_1.academicFacultyService.allFaculties(paginationRes, filter);
         res.status(200).json({
             success: true,

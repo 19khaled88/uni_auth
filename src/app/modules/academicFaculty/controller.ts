@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from 'express'
-import { filterFields, paginationFields } from '../../../shared/constants'
+import { paginationFields } from '../../../shared/constants'
 import pick from '../../../shared/pick'
 import { academicFacultyService } from './service'
 import status from 'http-status'
+import { filterFields } from './constants'
 
 const createAcademicFaculty = async (
     req: Request,

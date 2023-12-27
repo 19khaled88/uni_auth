@@ -4,25 +4,25 @@ import { calculatePagination } from '../../../helpers/paginationCalculate'
 import { IFilters, IPagination } from '../../../interfaces/paginationType'
 import { IGenericResponse } from '../../../shared/constants'
 
-import { IAcademicFaculty } from './interface'
-import { AcademicFaculty } from './model'
-import { facultySearchableFields } from './constants'
+import { IAcademicDepartment,  } from './interface'
+import { AcademicDepartment } from './model'
+import { departmentSearchableFields } from './constants'
 
-const createAcademicFaculty = async (
-    data: IAcademicFaculty,
-): Promise<IAcademicFaculty | null> => {
+const createAcademicDepartment = async (
+    data: IAcademicDepartment,
+): Promise<IAcademicDepartment | null> => {
    
-    const res = await AcademicFaculty.create(data)
+    const res = await AcademicDepartment.create(data)
     if (!res) {
-        throw new Error('Failed to create academic faculty')
+        throw new Error('Failed to create academic department')
     }
     return res
 }
 
-const allFaculties = async (
+const allDepartments = async (
     paginationOptions: IPagination,
     filter: IFilters,
-): Promise<IGenericResponse<IAcademicFaculty[]> | null> => {
+): Promise<IGenericResponse<IAcademicDepartment[]> | null> => {
     const { page, limit, sortBy, sortOrder } = paginationOptions
     const { searchTerm, ...filters } = filter
 
@@ -45,7 +45,7 @@ const allFaculties = async (
 
     if (searchTerm) {
         andCondition.push({
-            $or: facultySearchableFields.map((item: string, index: number) => ({
+            $or: departmentSearchableFields.map((item: string, index: number) => ({
                 [item]: {
                     $regex: searchTerm,
                     $options: 'i'
@@ -70,11 +70,12 @@ const allFaculties = async (
         sortCondition[paginate.sortBy] = paginate.sortOrder
     }
 
-    const res = await AcademicFaculty.find(finalConditions)
+    const res = await AcademicDepartment.find(finalConditions)
         .sort(sortCondition)
         .skip(paginate.skip)
         .limit(paginate.limit)
-    const total = await AcademicFaculty.countDocuments()
+        .populate('academicFaculty')
+    const total = await AcademicDepartment.countDocuments()
     return {
         meta: {
             page: paginate.page,
@@ -85,40 +86,39 @@ const allFaculties = async (
     }
 }
 
-const singleFaculty = async (id: string): Promise<IAcademicFaculty | null> => {
-    const response = await AcademicFaculty.findById(id).select({ _id: 0 })
+const singleDepartment = async (id: string): Promise<IAcademicDepartment | null> => {
+    const response = await AcademicDepartment.findById(id).select({ _id: 0 }).populate('academicFaculty')
     return response
 }
 
-const updateFaculty = async (id: string, payload: Partial<IAcademicFaculty>): Promise<IAcademicFaculty | null> => {
+const updateDepartment = async (id: string, payload: Partial<IAcademicDepartment>): Promise<IAcademicDepartment | null> => {
 
-    const isExist = await AcademicFaculty.findById(id)
+    const isExist = await AcademicDepartment.findById(id)
     if (!isExist) {
-        throw new ApiError(400, 'This Faculty not exist');
+        throw new ApiError(400, 'This department not exist');
     }
 
-    const response = await AcademicFaculty.findByIdAndUpdate(id, payload, { new: true, runValidators: true })
+    const response = await AcademicDepartment.findByIdAndUpdate(id, payload, { new: true, runValidators: true })
     return response
 }
 
-const deleteFaculty = async (id: string) => {
+const deleteDepartment = async (id: string) => {
 
-    const isExist = await AcademicFaculty.findById(id)
+    const isExist = await AcademicDepartment.findById(id)
     if (!isExist) {
-        throw new ApiError(400, 'This Faculty not exist');
+        throw new ApiError(400, 'This department not exist');
     }
 
-    const response = await AcademicFaculty.findByIdAndDelete(id)
+    const response = await AcademicDepartment.findByIdAndDelete(id)
 
     return response
 
 
 }
-
-export const academicFacultyService = {
-    createAcademicFaculty,
-    allFaculties,
-    singleFaculty,
-    updateFaculty,
-    deleteFaculty
+export const academicDepartmentService = {
+    createAcademicDepartment,
+    allDepartments,
+    singleDepartment,
+    updateDepartment,
+    deleteDepartment
 }

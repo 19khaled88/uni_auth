@@ -12,32 +12,27 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.academicSemesterController = void 0;
+exports.academicDepartmentController = void 0;
 const constants_1 = require("../../../shared/constants");
 const pick_1 = __importDefault(require("../../../shared/pick"));
 const service_1 = require("./service");
 const http_status_1 = __importDefault(require("http-status"));
 const constants_2 = require("./constants");
-const createAcademicSememster = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const createAcademicDepartment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield service_1.academicSemesterService.createAcademicSemester(req.body);
+        const response = yield service_1.academicDepartmentService.createAcademicDepartment(req.body);
         res.status(200).json({
             success: true,
-            message: 'Successfully created Academic semester',
+            message: 'Successfully created Academic faculty',
             result: response,
         });
         // next()
     }
     catch (error) {
-        // res.status(200).json({
-        //     success: false,
-        //     message: 'Academic semester not created',
-        //     result: error,
-        // })
         next(error);
     }
 });
-const allSemester = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const allDepartments = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // const paginationOptions = {
         //     page: Number(req.query.page),
@@ -48,10 +43,10 @@ const allSemester = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         // const paginationRes = await pagenationElement(req)
         const paginationRes = (0, pick_1.default)(req.query, constants_1.paginationFields);
         const filter = (0, pick_1.default)(req.query, constants_2.filterFields);
-        const response = yield service_1.academicSemesterService.allSemester(paginationRes, filter);
+        const response = yield service_1.academicDepartmentService.allDepartments(paginationRes, filter);
         res.status(200).json({
             success: true,
-            message: 'Successfully Retrieve Academic semesters',
+            message: 'Successfully Retrieved Academic departments',
             meta: response === null || response === void 0 ? void 0 : response.meta,
             result: response === null || response === void 0 ? void 0 : response.data,
         });
@@ -61,60 +56,20 @@ const allSemester = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         next(error);
     }
 });
-const singleSemester = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const singleDepartment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield service_1.academicSemesterService.singleSemester(req.params.id);
+        const response = yield service_1.academicDepartmentService.singleDepartment(req.params.id);
         if (response != null) {
             res.status(200).json({
                 success: true,
-                message: 'Single semester retrieved',
-                data: response,
-            });
-        }
-        res.status(http_status_1.default.NOT_FOUND).json({
-            success: false,
-            message: 'Data not found',
-            data: null,
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-});
-const updateSemester = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield service_1.academicSemesterService.updateSemester(req.params.id, req.body);
-        if (response != null) {
-            res.status(200).json({
-                success: true,
-                message: 'Semester updated successfully for given ID',
-                data: response,
-            });
-        }
-        res.status(http_status_1.default.NOT_FOUND).json({
-            success: false,
-            message: 'Semester not updated!!',
-            data: null,
-        });
-    }
-    catch (error) {
-        next(error);
-    }
-});
-const deleteSemester = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const response = yield service_1.academicSemesterService.deleteSemester(req.params.id);
-        if (response != null) {
-            res.status(200).json({
-                success: true,
-                message: 'Semester deleted successfully for given ID',
+                message: 'Single department retrieved',
                 data: response,
             });
         }
         else {
             res.status(http_status_1.default.NOT_FOUND).json({
                 success: false,
-                message: 'Semester not deleted',
+                message: 'Data not found',
                 data: null,
             });
         }
@@ -123,10 +78,54 @@ const deleteSemester = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         next(error);
     }
 });
-exports.academicSemesterController = {
-    createAcademicSememster,
-    allSemester,
-    singleSemester,
-    updateSemester,
-    deleteSemester,
+const updateDepartment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield service_1.academicDepartmentService.updateDepartment(req.params.id, req.body);
+        if (response != null) {
+            res.status(200).json({
+                success: true,
+                message: 'Department updated successfully for given ID',
+                data: response,
+            });
+        }
+        else {
+            res.status(http_status_1.default.NOT_FOUND).json({
+                success: false,
+                message: 'Department not updated!!',
+                data: null,
+            });
+        }
+    }
+    catch (error) {
+        next(error);
+    }
+});
+const deleteDepartment = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const response = yield service_1.academicDepartmentService.deleteDepartment(req.params.id);
+        if (response != null) {
+            res.status(200).json({
+                success: true,
+                message: 'Department deleted successfully for given ID',
+                data: response,
+            });
+        }
+        else {
+            res.status(http_status_1.default.NOT_FOUND).json({
+                success: false,
+                message: 'Department not deleted',
+                data: null,
+            });
+        }
+    }
+    catch (error) {
+        next(error);
+    }
+});
+exports.academicDepartmentController = {
+    createAcademicDepartment,
+    allDepartments,
+    singleDepartment,
+    updateDepartment,
+    deleteDepartment,
 };
