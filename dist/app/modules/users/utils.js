@@ -59,7 +59,7 @@ exports.generateUserId = generateUserId;
 const generate_Student_Id = (academicSemester) => __awaiter(void 0, void 0, void 0, function* () {
     const currentId = (yield (0, exports.findLastStudentId)()) || (0).toString().padStart(5, '0');
     let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0');
-    incrementId = `${academicSemester.year}-${academicSemester.code}-${incrementId}`;
+    incrementId = `${academicSemester === null || academicSemester === void 0 ? void 0 : academicSemester.year}-${academicSemester === null || academicSemester === void 0 ? void 0 : academicSemester.code}-${incrementId}`;
     return incrementId;
 });
 exports.generate_Student_Id = generate_Student_Id;

@@ -1,4 +1,4 @@
-import { Model, Schema, model } from 'mongoose'
+import { Model, Schema, model, Types } from 'mongoose'
 import { IUser } from './interfaces'
 
 type UserModel = Model<IUser, Record<string, unknown>>
@@ -19,7 +19,7 @@ const userSchema = new Schema<IUser>(
       required: true,
     },
     student:{
-      type:Schema.Types.ObjectId,
+      type:Types.ObjectId,
       ref:'Student',
     },
     faculty:{

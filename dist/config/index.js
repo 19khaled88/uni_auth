@@ -11,4 +11,6 @@ exports.default = {
     port: process.env.PORT,
     env: process.env.NODE_ENV,
     default_password: process.env.DEFAULT_STUDENT_PASS,
+    default_student_password: process.env.DEFAULT_PASS,
+    default_role: process.env.DEFAULT_USER_ROLE,
 };

@@ -93,7 +93,7 @@ exports.studentSchema = new mongoose_1.Schema({
     },
     profileImage: {
         type: String,
-        required: true
+        // required:true
     },
     academicFaculty: {
         type: mongoose_1.Schema.Types.ObjectId,

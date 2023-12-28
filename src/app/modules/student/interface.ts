@@ -1,5 +1,8 @@
 import { Schema, Model} from 'mongoose'
 import { IBloodGroup, IGender } from './contants'
+import { IAcademicFaculty } from '../academicFaculty/interface'
+import { IAcademicSemester } from '../academicSemester/interface'
+import { IAcademicDepartment } from '../academicDepartment/interface'
 // import { studentSchema } from './model'
 // export type IStudent ={
 //     id:string
@@ -23,7 +26,7 @@ export type IStudent = {
     emergencyContactNo:string 
     presentAddress:string
     permanentAddress:string
-    bloodGroup:IBloodGroup
+    bloodGroup?:IBloodGroup
     guardian:{
         fatherName:string
         fatherOccupation:string
@@ -33,8 +36,8 @@ export type IStudent = {
         motherContactNo:string
         address:string
     }
-    profileImage:string 
-    academicFaculty:Schema.Types.ObjectId
-    academicSemester:Schema.Types.ObjectId
-    academicDepartment:Schema.Types.ObjectId
+    profileImage?:string 
+    academicFaculty:Schema.Types.ObjectId | IAcademicFaculty
+    academicSemester:Schema.Types.ObjectId | IAcademicSemester
+    academicDepartment:Schema.Types.ObjectId | IAcademicDepartment
   }

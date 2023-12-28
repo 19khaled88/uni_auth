@@ -9,5 +9,6 @@ const router = express()
 
 
 router.post('/create-user', validateRequest(UserZodValidation.createUserZodSchema),userController.createUser)
+router.post('/create-student',validateRequest(UserZodValidation.createStudentZodSchema),userController.createStudent)
 
 export default router
