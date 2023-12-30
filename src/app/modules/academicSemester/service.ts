@@ -58,6 +58,8 @@ const allSemester = async (
         })
     }
 
+   
+
     if (Object.keys(filters).length) {
         andCondition.push({
             $and: Object.entries(filters).map(([field, value]) => ({

@@ -2,9 +2,9 @@ import cors from 'cors'
 import express, { Application, NextFunction, Request, Response } from 'express'
 import GlobalErrorHandler from './app/middleware/globalErrorHandler'
 import userRouter from './app/modules/users/route'
-import semesterRouter from './app/modules/academicSemester/route'
-import facultyRoute from './app/modules/academicFaculty/route'
-import departmentRoute from './app/modules/academicDepartment/route'
+import academicSemesterRouter from './app/modules/academicSemester/route'
+import academicFacultyRoute from './app/modules/academicFaculty/route'
+import academicDepartmentRoute from './app/modules/academicDepartment/route'
 import httpStatus from 'http-status'
 
 const app: Application = express()
@@ -18,9 +18,9 @@ app.use(express.urlencoded({ extended: true }))
 
 //routes
 app.use('/api/v1/user',userRouter)
-app.use('/api/v1/semester',semesterRouter)
-app.use('/api/v1/faculty',facultyRoute)
-app.use('/api/v1/department',departmentRoute)
+app.use('/api/v1/academicSemester',academicSemesterRouter)
+app.use('/api/v1/academicFaculty',academicFacultyRoute)
+app.use('/api/v1/academicDepartment',academicDepartmentRoute)
 
 
 app.get('/', (req: Request, res: Response) => {

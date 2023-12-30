@@ -41,6 +41,7 @@ exports.studentSchema = new mongoose_1.Schema({
     contactNo: {
         type: String,
         required: true,
+        unique: false
     },
     emergencyContactNo: {
         type: String,

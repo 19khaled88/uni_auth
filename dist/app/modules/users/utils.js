@@ -58,9 +58,18 @@ const generateUserId = () => __awaiter(void 0, void 0, void 0, function* () {
 exports.generateUserId = generateUserId;
 const generate_Student_Id = (academicSemester) => __awaiter(void 0, void 0, void 0, function* () {
     const currentId = (yield (0, exports.findLastStudentId)()) || (0).toString().padStart(5, '0');
-    let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0');
-    incrementId = `${academicSemester === null || academicSemester === void 0 ? void 0 : academicSemester.year}-${academicSemester === null || academicSemester === void 0 ? void 0 : academicSemester.code}-${incrementId}`;
-    return incrementId;
+    const isSplit = currentId.split('-');
+    if (isSplit.length > 0) {
+        const splited = isSplit.length - 1;
+        let incrementId = (parseInt(isSplit[splited]) + 1).toString().padStart(5, '0');
+        incrementId = `${academicSemester === null || academicSemester === void 0 ? void 0 : academicSemester.year}-${academicSemester === null || academicSemester === void 0 ? void 0 : academicSemester.code}-${incrementId}`;
+        return incrementId;
+    }
+    else {
+        let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0');
+        incrementId = `${academicSemester === null || academicSemester === void 0 ? void 0 : academicSemester.year}-${academicSemester === null || academicSemester === void 0 ? void 0 : academicSemester.code}-${incrementId}`;
+        return incrementId;
+    }
 });
 exports.generate_Student_Id = generate_Student_Id;
 const generate_Faculty_Id = () => __awaiter(void 0, void 0, void 0, function* () {

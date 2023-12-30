@@ -18,9 +18,9 @@ app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
 //routes
 app.use('/api/v1/user', route_1.default);
-app.use('/api/v1/semester', route_2.default);
-app.use('/api/v1/faculty', route_3.default);
-app.use('/api/v1/department', route_4.default);
+app.use('/api/v1/academicSemester', route_2.default);
+app.use('/api/v1/academicFaculty', route_3.default);
+app.use('/api/v1/academicDepartment', route_4.default);
 app.get('/', (req, res) => {
     res.json({ message: 'auth service for university management' });
 });

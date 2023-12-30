@@ -17,7 +17,7 @@ export const findLastStudentId=async():Promise<string | undefined>=>{
     const lastStudent = await User.findOne({role:'student'},{id:1, _id:0}).sort({
         createdAt: -1
     }).lean();
-
+    
     return lastStudent?.id
 }
 export const findLastFacultyId=async():Promise<string | undefined>=>{
@@ -44,6 +44,8 @@ export const findLastSuperAdminId=async():Promise<string | undefined>=>{
 }
 
 
+
+
 export const generateUserId =async()=>{
     const currentId = (await findLastUser()) || (0).toString().padStart(5, '0')
     const incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0')
@@ -55,10 +57,23 @@ export const generateUserId =async()=>{
 
 export const generate_Student_Id =async(academicSemester:IAcademicSemester | null)=>{
     const currentId = (await findLastStudentId()) || (0).toString().padStart(5, '0')
-    let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0')
-    incrementId = `${academicSemester?.year}-${academicSemester?.code}-${incrementId}`
+    const isSplit = currentId.split('-')
+   
+    if(isSplit.length > 0){
+        const splited = isSplit.length - 1
+       
+        let incrementId = (parseInt(isSplit[splited]) + 1).toString().padStart(5, '0')
+        incrementId = `${academicSemester?.year}-${academicSemester?.code}-${incrementId}`
 
-    return incrementId
+        return incrementId
+    }else{
+        let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0')
+        incrementId = `${academicSemester?.year}-${academicSemester?.code}-${incrementId}`
+    
+        return incrementId
+    }
+    
+    
 }
 
 export const generate_Faculty_Id=async()=>{
