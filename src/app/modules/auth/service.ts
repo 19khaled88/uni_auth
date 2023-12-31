@@ -2,9 +2,11 @@ import jwt, { JwtPayload, Secret } from 'jsonwebtoken'
 import config from '../../../config'
 import ApiError from '../../../errors/ApiError'
 import { User } from '../users/model'
-import { ILogin, ILoginRespone } from './interfacce'
+import { IChangePassword, ILogin, ILoginRespone } from './interfacce'
 import { createAccessToken, createRefreshToken, tokenVerify } from '../../../helpers/jwtHelper'
 import httpStatus from 'http-status'
+import bcrypt from 'bcrypt'
+import { IUser } from '../users/interfaces'
 
 const userLogin = async (payload: ILogin):Promise<ILoginRespone> => {
 
@@ -62,7 +64,31 @@ const refreshToken=async(refreshToken:string)=>{
     }
 }
 
+const changePassword=async(data:IChangePassword):Promise<IUser>=>{
+
+   if(data.new_password != data.confirm_password){
+    throw new ApiError(400,'New password and Confirm password are not same')
+   }
+
+   const isExist = await User.findOne({id:data.id})
+   if(!isExist){
+    throw new ApiError(400, 'This user not exist!')
+   }
+
+   const isValidUser = await bcrypt.compare(data.old_password, isExist.password)
+   if(!isValidUser){
+    throw new ApiError(400,'Current password not match')
+   }
+
+   const salt = bcrypt.genSaltSync(Number(config.salt_round))
+   const EncrytedPassword =await bcrypt.hash(data.new_password, salt)
+   const update = {password:EncrytedPassword,updatedAt:new Date()}
+   const response = await User.findOneAndUpdate({id:data.id},update,{new:true,upsert:true,runValidators:true})
+   return response
+}
+
 export const authService = {
   userLogin,
-  refreshToken
+  refreshToken,
+  changePassword
 }

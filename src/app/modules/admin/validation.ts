@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z,object } from "zod"
 import { bloodGroup, gender } from "./contants"
 
 
@@ -62,35 +62,24 @@ const createAdminZodSchema=z.object({
 
 const updateAdminZodSchema=z.object({
     body:z.object({
-        admin:z.object({
-            name:z.object({
-                firstName:z.string().optional(),
-                middleName:z.string().optional(),
-                lastName:z.string().optional(),
-            }).optional(),
-            gender:z.enum([...gender] as [string, ...string[]]).optional(),
-            dateOfBirth:z.string().optional(),
-            email:z.string().email().optional(),
-            contactNo:z.string().optional(),
-            emergencyContactNo:z.string().optional(),
-            presentAddress:z.string().optional(),
-            permanentAddress:z.string().optional(),
-            bloodGroup:z.enum([...bloodGroup]as [string, ...string[]]).optional(),
-            guardian:z.object({
-                fatherName:z.string().optional(),
-                fatherOccupation:z.string().optional(),
-                fatherContactNo:z.string().optional(),
-                motherName:z.string().optional(),
-                motherOccupation:z.string().optional(),
-                motherContactNo:z.string().optional(),
-                address:z.string().optional()
-            }).optional(),
-            profileImage:z.string().optional(),
-            academicFaculty:z.string().optional(),
-            academicDepartment:z.string().optional(),
-            academicSemester:z.string().optional(),
-            
-        })
+        name:z.object({
+            firstName:z.optional(z.string({required_error:'first name required'})),
+            middleName:z.optional(z.string()),
+            lastName:z.optional(z.string()),
+        }).optional(),
+        gender:z.optional(z.enum([...gender] as [string, ...string[]])),
+        dateOfBirth:z.optional(z.string()),
+        email:z.optional(z.string().email()),
+        contactNo:z.string().optional(),
+        emergencyContactNo:z.optional(z.string()),
+        presentAddress:z.optional(z.string()),
+        permanentAddress:z.optional(z.string()),
+        bloodGroup:z.optional(z.enum([...bloodGroup]as [string, ...string[]])),
+        profileImage:z.optional(z.string()),
+        academicFaculty:z.optional(z.string()),
+        academicDepartment:z.optional(z.string()),
+        academicSemester:z.optional(z.string()),
+
     })
 })
 

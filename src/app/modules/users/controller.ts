@@ -55,8 +55,11 @@ const createAdmin = async (
 }
 
 
+
+
 export const userController = {
   createUser,
   createStudent,
-  createAdmin
+  createAdmin,
+  
 }

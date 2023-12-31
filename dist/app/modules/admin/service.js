@@ -106,8 +106,9 @@ const updateAdmin = (id, payload) => __awaiter(void 0, void 0, void 0, function*
     if (!isExist) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'This id not found');
     }
-    const { name } = payload, admin = __rest(payload, ["name"]);
-    let updatingAdminData = Object.assign({}, admin);
+    const { name } = payload, others = __rest(payload, ["name"]);
+    console.log(name, others);
+    let updatingAdminData = Object.assign({}, others);
     // Update the name properties if they exist in the payload
     // if (name && Object.keys(name).length > 0) {
     //   updatingAdminData.name = { ...isExist.name, ...name };

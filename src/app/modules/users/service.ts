@@ -183,8 +183,11 @@ const createAdmin = async (
   return newUserAllData
 }
 
+
+
 export const userService = {
   createUser,
   createStudent,
   createAdmin,
+ 
 }

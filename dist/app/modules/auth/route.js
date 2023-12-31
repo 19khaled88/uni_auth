@@ -8,6 +8,9 @@ const controller_1 = require("./controller");
 const validateRequest_1 = __importDefault(require("../../middleware/validateRequest"));
 const validation_1 = require("./validation");
 const router = (0, express_1.default)();
+//authenticate route
 router.post('/login', (0, validateRequest_1.default)(validation_1.UserZodValidation.userLoginZodSchema), controller_1.authController.userLogin);
 router.post('/refresh-token', (0, validateRequest_1.default)(validation_1.UserZodValidation.refreshTokenZodSchema), controller_1.authController.refreshToken);
+//change password 
+router.post('/change-password', (0, validateRequest_1.default)(validation_1.UserZodValidation.passwordChangeZodSchema), controller_1.authController.changePassword);
 exports.default = router;

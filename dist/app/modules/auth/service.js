@@ -18,6 +18,7 @@ const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const model_1 = require("../users/model");
 const jwtHelper_1 = require("../../../helpers/jwtHelper");
 const http_status_1 = __importDefault(require("http-status"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const userLogin = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const { id, password } = payload;
     const user = new model_1.User();
@@ -58,7 +59,26 @@ const refreshToken = (refreshToken) => __awaiter(void 0, void 0, void 0, functio
         throw new ApiError_1.default(http_status_1.default.FORBIDDEN, 'Invalid refresh token');
     }
 });
+const changePassword = (data) => __awaiter(void 0, void 0, void 0, function* () {
+    if (data.new_password != data.confirm_password) {
+        throw new ApiError_1.default(400, 'New password and Confirm password are not same');
+    }
+    const isExist = yield model_1.User.findOne({ id: data.id });
+    if (!isExist) {
+        throw new ApiError_1.default(400, 'This user not exist!');
+    }
+    const isValidUser = yield bcrypt_1.default.compare(data.old_password, isExist.password);
+    if (!isValidUser) {
+        throw new ApiError_1.default(400, 'Current password not match');
+    }
+    const salt = bcrypt_1.default.genSaltSync(Number(config_1.default.salt_round));
+    const EncrytedPassword = yield bcrypt_1.default.hash(data.new_password, salt);
+    const update = { password: EncrytedPassword, updatedAt: new Date() };
+    const response = yield model_1.User.findOneAndUpdate({ id: data.id }, update, { new: true, upsert: true, runValidators: true });
+    return response;
+});
 exports.authService = {
     userLogin,
-    refreshToken
+    refreshToken,
+    changePassword
 };

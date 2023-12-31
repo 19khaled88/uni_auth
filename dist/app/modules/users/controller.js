@@ -66,5 +66,5 @@ const createAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
 exports.userController = {
     createUser,
     createStudent,
-    createAdmin
+    createAdmin,
 };

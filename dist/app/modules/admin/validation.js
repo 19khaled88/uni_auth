@@ -59,34 +59,23 @@ const createAdminZodSchema = zod_1.z.object({
 });
 const updateAdminZodSchema = zod_1.z.object({
     body: zod_1.z.object({
-        admin: zod_1.z.object({
-            name: zod_1.z.object({
-                firstName: zod_1.z.string().optional(),
-                middleName: zod_1.z.string().optional(),
-                lastName: zod_1.z.string().optional(),
-            }).optional(),
-            gender: zod_1.z.enum([...contants_1.gender]).optional(),
-            dateOfBirth: zod_1.z.string().optional(),
-            email: zod_1.z.string().email().optional(),
-            contactNo: zod_1.z.string().optional(),
-            emergencyContactNo: zod_1.z.string().optional(),
-            presentAddress: zod_1.z.string().optional(),
-            permanentAddress: zod_1.z.string().optional(),
-            bloodGroup: zod_1.z.enum([...contants_1.bloodGroup]).optional(),
-            guardian: zod_1.z.object({
-                fatherName: zod_1.z.string().optional(),
-                fatherOccupation: zod_1.z.string().optional(),
-                fatherContactNo: zod_1.z.string().optional(),
-                motherName: zod_1.z.string().optional(),
-                motherOccupation: zod_1.z.string().optional(),
-                motherContactNo: zod_1.z.string().optional(),
-                address: zod_1.z.string().optional()
-            }).optional(),
-            profileImage: zod_1.z.string().optional(),
-            academicFaculty: zod_1.z.string().optional(),
-            academicDepartment: zod_1.z.string().optional(),
-            academicSemester: zod_1.z.string().optional(),
-        })
+        name: zod_1.z.object({
+            firstName: zod_1.z.optional(zod_1.z.string({ required_error: 'first name required' })),
+            middleName: zod_1.z.optional(zod_1.z.string()),
+            lastName: zod_1.z.optional(zod_1.z.string()),
+        }).optional(),
+        gender: zod_1.z.optional(zod_1.z.enum([...contants_1.gender])),
+        dateOfBirth: zod_1.z.optional(zod_1.z.string()),
+        email: zod_1.z.optional(zod_1.z.string().email()),
+        contactNo: zod_1.z.string().optional(),
+        emergencyContactNo: zod_1.z.optional(zod_1.z.string()),
+        presentAddress: zod_1.z.optional(zod_1.z.string()),
+        permanentAddress: zod_1.z.optional(zod_1.z.string()),
+        bloodGroup: zod_1.z.optional(zod_1.z.enum([...contants_1.bloodGroup])),
+        profileImage: zod_1.z.optional(zod_1.z.string()),
+        academicFaculty: zod_1.z.optional(zod_1.z.string()),
+        academicDepartment: zod_1.z.optional(zod_1.z.string()),
+        academicSemester: zod_1.z.optional(zod_1.z.string()),
     })
 });
 exports.AdminZodValidation = {

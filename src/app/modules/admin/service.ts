@@ -105,9 +105,9 @@ const getAllAdmins = async (
       throw new ApiError(httpStatus.NOT_FOUND, 'This id not found')
     }
   
-    const { name, ...admin } = payload
-  
-    let updatingAdminData: Partial<IAdmin> = { ...admin }
+    const { name, ...others } = payload
+    console.log(name,others)
+    let updatingAdminData: Partial<IAdmin> = { ...others }
   
     // Update the name properties if they exist in the payload
   
