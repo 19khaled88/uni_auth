@@ -1,6 +1,7 @@
 import { Model, Schema, Types } from "mongoose"
 import { IStudent } from "../student/interface"
 import { IAdmin } from "../admin/interface"
+import { IFaculty } from "../faculty/interface"
 
 //interface >> schema >> model
 export type IUser = {
@@ -9,7 +10,7 @@ export type IUser = {
   password: string 
   student:Types.ObjectId | IStudent
   // student:Schema.Types.ObjectId | IStudent
-  faculty:Schema.Types.ObjectId
+  faculty:Types.ObjectId | IFaculty
   admin:Types.ObjectId | IAdmin
 }
 

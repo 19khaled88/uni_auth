@@ -9,7 +9,9 @@ import { IStudent } from '../student/interface'
 import { Student } from '../student/model'
 import { IUser } from './interfaces'
 import { User } from './model'
-import { generateUserId, generate_Admin_Id, generate_Student_Id } from './utils'
+import { generateUserId, generate_Admin_Id, generate_Faculty_Id, generate_Student_Id } from './utils'
+import { IFaculty } from '../faculty/interface'
+import { Faculty } from '../faculty/model'
 
 const createUser = async (user: IUser): Promise<IUser | null> => {
   const id = await generateUserId()
@@ -183,11 +185,81 @@ const createAdmin = async (
   return newUserAllData
 }
 
+// with transaction and rollback way
+const createFaculty=async(faculty:IFaculty,userData:IUser)=>{
+  if (!userData.password) {
+    userData.password = config.default_admin_password as string
+  }
 
+  //user role set
+  if (!userData.role) {
+    userData.role = config.default_faculty_role as string
+  }
+
+  //get academic semester info
+  const academicSemesterInfo = await AcademicSemester.findById(
+    faculty.academicSemester,
+  )
+
+  let newUserAllData = null
+
+  // transaction & rollback
+  const session = await mongoose.startSession()
+  session.startTransaction()
+  try {
+    //generate student id
+    const id = await generate_Faculty_Id(academicSemesterInfo)
+    userData.id = id
+    faculty.id = id
+
+    const newFaculty = await Faculty.create([faculty], { session })
+
+    if (!newFaculty.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create faculty')
+    }
+
+    //set student's _id into user's student reference
+    userData.admin = newFaculty[0]._id
+
+    const newUser = await User.create([userData], { session })
+
+    if (!newUser.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create user')
+    }
+
+    newUserAllData = newUser[0]
+
+    await session.commitTransaction()
+    await session.endSession()
+  } catch (error) {
+    await session.abortTransaction()
+    await session.endSession()
+    throw error
+  }
+
+  if (newUserAllData) {
+    newUserAllData = await User.findOne({ id: newUserAllData.id }).populate({
+      path: 'faculty',
+      populate: [
+        {
+          path: 'academicFaculty',
+        },
+        {
+          path: 'academicDepartment',
+        },
+        {
+          path: 'academicSemester',
+        },
+      ],
+    })
+  }
+
+  return newUserAllData
+}
 
 export const userService = {
   createUser,
   createStudent,
   createAdmin,
- 
+  createFaculty
 }

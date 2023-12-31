@@ -22,6 +22,7 @@ const model_2 = require("../admin/model");
 const model_3 = require("../student/model");
 const model_4 = require("./model");
 const utils_1 = require("./utils");
+const model_5 = require("../faculty/model");
 const createUser = (user) => __awaiter(void 0, void 0, void 0, function* () {
     const id = yield (0, utils_1.generateUserId)();
     // if(user.role === 'student'){
@@ -155,8 +156,66 @@ const createAdmin = (admin, userData) => __awaiter(void 0, void 0, void 0, funct
     }
     return newUserAllData;
 });
+// with transaction and rollback way
+const createFaculty = (faculty, userData) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!userData.password) {
+        userData.password = config_1.default.default_admin_password;
+    }
+    //user role set
+    if (!userData.role) {
+        userData.role = config_1.default.default_faculty_role;
+    }
+    //get academic semester info
+    const academicSemesterInfo = yield model_1.AcademicSemester.findById(faculty.academicSemester);
+    let newUserAllData = null;
+    // transaction & rollback
+    const session = yield mongoose_1.default.startSession();
+    session.startTransaction();
+    try {
+        //generate student id
+        const id = yield (0, utils_1.generate_Faculty_Id)(academicSemesterInfo);
+        userData.id = id;
+        faculty.id = id;
+        const newFaculty = yield model_5.Faculty.create([faculty], { session });
+        if (!newFaculty.length) {
+            throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create faculty');
+        }
+        //set student's _id into user's student reference
+        userData.admin = newFaculty[0]._id;
+        const newUser = yield model_4.User.create([userData], { session });
+        if (!newUser.length) {
+            throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'Failed to create user');
+        }
+        newUserAllData = newUser[0];
+        yield session.commitTransaction();
+        yield session.endSession();
+    }
+    catch (error) {
+        yield session.abortTransaction();
+        yield session.endSession();
+        throw error;
+    }
+    if (newUserAllData) {
+        newUserAllData = yield model_4.User.findOne({ id: newUserAllData.id }).populate({
+            path: 'faculty',
+            populate: [
+                {
+                    path: 'academicFaculty',
+                },
+                {
+                    path: 'academicDepartment',
+                },
+                {
+                    path: 'academicSemester',
+                },
+            ],
+        });
+    }
+    return newUserAllData;
+});
 exports.userService = {
     createUser,
     createStudent,
     createAdmin,
+    createFaculty
 };

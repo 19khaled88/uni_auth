@@ -5,7 +5,7 @@ export type IBloodGroup='O+'|'O-'|'A+'|'A-'|'AB+'|'AB-'
 export const bloodGroup =['O+','O-','A+','A-','AB+','AB-']
 
 export const filterFields = ['searchTerm','gender','contactNo','presentAddress']
-export const studentSearchableFields=['bloodGroup','dateOfBirth','contactNo','emergencyContactNo','name.firstName','name.lastName']
+export const facultySearchableFields=['bloodGroup','dateOfBirth','contactNo','emergencyContactNo','name.firstName','name.lastName']
 
 export type IFilters ={
     searchTerm?:string | number

@@ -4,15 +4,15 @@ import { IAcademicFaculty } from '../academicFaculty/interface'
 import { IAcademicSemester } from '../academicSemester/interface'
 import { IAcademicDepartment } from '../academicDepartment/interface'
 // import { studentSchema } from './model'
-// export type IStudent ={
+// export type IFaculty ={
 //     id:string
 // }
 
-// export type IStudent = InferSchemaType<typeof studentSchema>
+// export type IFaculty = InferSchemaType<typeof studentSchema>
 
-// export type StudentModel = Model<IStudent, Record<string, unknown>>
-export type StudentModel = Model<IStudent, Record<string, unknown>>
-export type IStudent = {
+// export type StudentModel = Model<IFaculty, Record<string, unknown>>
+export type FacultyModel = Model<IFaculty, Record<string, unknown>>
+export type IFaculty = {
     id: string
     name: {
         firstName:string
@@ -27,15 +27,6 @@ export type IStudent = {
     presentAddress:string
     permanentAddress:string
     bloodGroup?:IBloodGroup
-    guardian:{
-        fatherName:string
-        fatherOccupation:string
-        fatherContactNo:string
-        motherName:string
-        motherOccupation:string
-        motherContactNo:string
-        address:string
-    }
     profileImage?:string 
     academicFaculty:Schema.Types.ObjectId | IAcademicFaculty
     academicSemester:Schema.Types.ObjectId | IAcademicSemester

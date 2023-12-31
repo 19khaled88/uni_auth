@@ -1,11 +1,8 @@
 import { Schema, model } from 'mongoose'
 import { bloodGroup, gender } from './contants'
-import { IStudent, StudentModel } from './interface'
+import { FacultyModel, IFaculty } from './interface'
 
-
-
-
-export const studentSchema = new Schema<IStudent>({
+export const facultySchema = new Schema<IFaculty>({
   id: {
     type: String,
     required: true,
@@ -62,39 +59,6 @@ export const studentSchema = new Schema<IStudent>({
     required: true,
     enum:bloodGroup
   },
-  guardian: {
-    type: {
-      fatherName: {
-        type: String,
-        required: true,
-      },
-
-      fatherOccupation: {
-        type: String,
-        required: true,
-      },
-      fatherContactNo: {
-        type: String,
-        required: true,
-      },
-      motherName: {
-        type: String,
-        required: true,
-      },
-      motherOccupation: {
-        type: String,
-        required: true,
-      },
-      motherContactNo: {
-        type: String,
-        required: true,
-      },
-      address: {
-        type: String,
-        required: true,
-      },
-    },
-  },
   profileImage:{
     type:String,
     // required:true
@@ -121,4 +85,4 @@ export const studentSchema = new Schema<IStudent>({
     }
 })
 
-export const Student = model<IStudent, StudentModel>('Student', studentSchema)
+export const Faculty = model<IFaculty, FacultyModel>('Faculty', facultySchema)

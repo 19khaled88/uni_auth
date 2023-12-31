@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Student = exports.studentSchema = void 0;
+exports.Faculty = exports.facultySchema = void 0;
 const mongoose_1 = require("mongoose");
 const contants_1 = require("./contants");
-exports.studentSchema = new mongoose_1.Schema({
+exports.facultySchema = new mongoose_1.Schema({
     id: {
         type: String,
         required: true,
@@ -60,38 +60,6 @@ exports.studentSchema = new mongoose_1.Schema({
         required: true,
         enum: contants_1.bloodGroup
     },
-    guardian: {
-        type: {
-            fatherName: {
-                type: String,
-                required: true,
-            },
-            fatherOccupation: {
-                type: String,
-                required: true,
-            },
-            fatherContactNo: {
-                type: String,
-                required: true,
-            },
-            motherName: {
-                type: String,
-                required: true,
-            },
-            motherOccupation: {
-                type: String,
-                required: true,
-            },
-            motherContactNo: {
-                type: String,
-                required: true,
-            },
-            address: {
-                type: String,
-                required: true,
-            },
-        },
-    },
     profileImage: {
         type: String,
         // required:true
@@ -117,4 +85,4 @@ exports.studentSchema = new mongoose_1.Schema({
         virtuals: true
     }
 });
-exports.Student = (0, mongoose_1.model)('Student', exports.studentSchema);
+exports.Faculty = (0, mongoose_1.model)('Faculty', exports.facultySchema);

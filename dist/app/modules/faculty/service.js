@@ -23,22 +23,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.studentService = void 0;
+exports.facultyService = void 0;
 const mongoose_1 = __importDefault(require("mongoose"));
-const model_1 = require("../student/model");
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const http_status_1 = __importDefault(require("http-status"));
-const contants_1 = require("../student/contants");
 const paginationCalculate_1 = require("../../../helpers/paginationCalculate");
-const model_2 = require("../users/model");
-const getAllStudents = (paginationOptions, filter) => __awaiter(void 0, void 0, void 0, function* () {
+const model_1 = require("../users/model");
+const model_2 = require("./model");
+const contants_1 = require("./contants");
+const getAllFaculties = (paginationOptions, filter) => __awaiter(void 0, void 0, void 0, function* () {
     const { page, limit, sortBy, sortOrder } = paginationOptions;
     const { searchTerm } = filter, filters = __rest(filter, ["searchTerm"]);
     const paginate = (0, paginationCalculate_1.calculatePagination)({ page, limit, sortBy, sortOrder });
     const andCondition = [];
     if (searchTerm) {
         andCondition.push({
-            $or: contants_1.studentSearchableFields.map((item, index) => ({
+            $or: contants_1.facultySearchableFields.map((item, index) => ({
                 [item]: {
                     $regex: searchTerm,
                     $options: 'i',
@@ -58,8 +58,8 @@ const getAllStudents = (paginationOptions, filter) => __awaiter(void 0, void 0, 
     if (paginate.sortBy && paginate.sortOrder) {
         sortCondition[paginate.sortBy] = paginate.sortOrder;
     }
-    const total = yield model_1.Student.countDocuments();
-    const response = yield model_1.Student.find(finalConditions)
+    const total = yield model_2.Faculty.countDocuments();
+    const response = yield model_2.Faculty.find(finalConditions)
         .sort(sortCondition)
         .limit(paginate.limit)
         .skip(paginate.skip);
@@ -72,14 +72,14 @@ const getAllStudents = (paginationOptions, filter) => __awaiter(void 0, void 0, 
         data: response,
     };
 });
-const singleStudent = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const response = yield model_1.Student.findById(id).select({ _id: 0 });
+const singleFaculty = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield model_2.Faculty.findById(id).select({ _id: 0 });
     return response;
 });
-const deleteStudent = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const ifExist = yield model_1.Student.findById(id);
+const deleteFaculty = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const ifExist = yield model_2.Faculty.findById(id);
     if (!ifExist) {
-        throw new ApiError_1.default(400, 'This student does not exist');
+        throw new ApiError_1.default(400, 'This Faculty does not exist');
     }
     let deleteSuccess = false;
     // transaction & rollback
@@ -87,8 +87,8 @@ const deleteStudent = (id) => __awaiter(void 0, void 0, void 0, function* () {
     //  session.startTransaction()
     try {
         yield session.withTransaction(() => __awaiter(void 0, void 0, void 0, function* () {
-            const res = yield model_1.Student.findByIdAndDelete([{ _id: id }], { session });
-            yield model_2.User.findOneAndDelete({ id: res === null || res === void 0 ? void 0 : res.id }, { session });
+            const res = yield model_2.Faculty.findByIdAndDelete([{ _id: id }], { session });
+            yield model_1.User.findOneAndDelete({ id: res === null || res === void 0 ? void 0 : res.id }, { session });
         }));
         deleteSuccess = true;
     }
@@ -101,13 +101,13 @@ const deleteStudent = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
     return deleteSuccess;
 });
-const updateStudent = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    let isExist = yield model_1.Student.findById(id);
+const updateFaculty = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    let isExist = yield model_2.Faculty.findById(id);
     if (!isExist) {
         throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'This id not found');
     }
-    const { name, guardian } = payload, student = __rest(payload, ["name", "guardian"]);
-    let updatingStudentData = Object.assign({}, student);
+    const { name } = payload, faculty = __rest(payload, ["name"]);
+    let updatingFacultyData = Object.assign({}, faculty);
     // Update the name properties if they exist in the payload
     // if (name && Object.keys(name).length > 0) {
     //   updatingStudentData.name = { ...isExist.name, ...name };
@@ -118,25 +118,18 @@ const updateStudent = (id, payload) => __awaiter(void 0, void 0, void 0, functio
         // });
         Object.keys(name).forEach(key => {
             const nameKey = `name.${key}`;
-            updatingStudentData[nameKey] = name[key];
+            updatingFacultyData[nameKey] = name[key];
         });
     }
-    if (guardian && Object.keys(guardian).length > 0) {
-        Object.keys(guardian).forEach(key => {
-            const guardianKey = `guardian.${key}`;
-            updatingStudentData[guardianKey] =
-                guardian[key];
-        });
-    }
-    const updatedStudent = yield model_1.Student.findByIdAndUpdate(id, updatingStudentData, {
+    const updatedFaculty = yield model_2.Faculty.findByIdAndUpdate(id, updatingFacultyData, {
         new: true, // Return the updated document
         runValidators: true, // Run validators for updates
     });
-    return updatedStudent;
+    return updatedFaculty;
 });
-exports.studentService = {
-    getAllStudents,
-    singleStudent,
-    deleteStudent,
-    updateStudent
+exports.facultyService = {
+    getAllFaculties,
+    singleFaculty,
+    deleteFaculty,
+    updateFaculty
 };

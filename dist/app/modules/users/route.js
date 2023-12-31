@@ -12,10 +12,13 @@ const user_1 = require("../../../enum/user");
 const controller_2 = require("../student/controller");
 const controller_3 = require("../admin/controller");
 const validation_2 = require("../admin/validation");
+const validation_3 = require("../faculty/validation");
+const controller_4 = require("../faculty/controller");
 const router = (0, express_1.default)();
 router.post('/create-user', (0, validateRequest_1.default)(validation_1.UserZodValidation.createUserZodSchema), controller_1.userController.createUser);
 router.post('/create-student', (0, validateRequest_1.default)(validation_1.UserZodValidation.createStudentZodSchema), (0, auth_1.auth)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SUPER_ADMIN), controller_1.userController.createStudent);
 router.post('/create-admin', (0, validateRequest_1.default)(validation_2.AdminZodValidation.createAdminZodSchema), (0, auth_1.auth)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SUPER_ADMIN), controller_1.userController.createAdmin);
+router.post('/create-faculty', (0, validateRequest_1.default)(validation_3.FacultyZodValidation.createFacultyZodSchema), (0, auth_1.auth)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SUPER_ADMIN), controller_1.userController.createFaculty);
 //student routes
 router.get('/get-student/:id', controller_2.studentController.singleStudent);
 router.delete('/delete-student/:id', (0, auth_1.auth)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SUPER_ADMIN), controller_2.studentController.deleteStudent);
@@ -26,6 +29,9 @@ router.get('/get-admin/:id', (0, auth_1.auth)(user_1.ENUM_USER_ROLE.ADMIN), cont
 router.delete('/delete-admin/:id', (0, auth_1.auth)(user_1.ENUM_USER_ROLE.SUPER_ADMIN), controller_3.adminController.deleteAdmin);
 router.patch('/update-admin/:id', (0, validateRequest_1.default)(validation_2.AdminZodValidation.updateAdminZodSchema), (0, auth_1.auth)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SUPER_ADMIN), controller_3.adminController.updateAdmin);
 router.get('/get-admins', (0, auth_1.auth)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SUPER_ADMIN), controller_3.adminController.getAllAdmins);
-router.post('/create-admin', () => { });
-router.post('/create-faculty', () => { });
+//faculty routes
+router.get('/get-faculty/:id', (0, auth_1.auth)(user_1.ENUM_USER_ROLE.ADMIN), controller_4.facultyController.singlefaculty);
+router.delete('/delete-faculty/:id', (0, auth_1.auth)(user_1.ENUM_USER_ROLE.SUPER_ADMIN, user_1.ENUM_USER_ROLE.ADMIN), controller_4.facultyController.deleteFaculty);
+router.patch('/update-faculty/:id', (0, validateRequest_1.default)(validation_3.FacultyZodValidation.updateFacultyZodSchema), (0, auth_1.auth)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SUPER_ADMIN), controller_4.facultyController.updateFaculty);
+router.get('/get-faculties', (0, auth_1.auth)(user_1.ENUM_USER_ROLE.ADMIN, user_1.ENUM_USER_ROLE.SUPER_ADMIN), controller_4.facultyController.getAllFaculties);
 exports.default = router;

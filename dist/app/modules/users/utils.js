@@ -88,11 +88,20 @@ const generate_Admin_Id = (academicSemester) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.generate_Admin_Id = generate_Admin_Id;
-const generate_Faculty_Id = () => __awaiter(void 0, void 0, void 0, function* () {
+const generate_Faculty_Id = (academicSemester) => __awaiter(void 0, void 0, void 0, function* () {
     const currentId = ((yield (0, exports.findLastFacultyId)()) || (0).toString().padStart(5, '0'));
-    let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0');
-    incrementId = `F-${incrementId}`;
-    return incrementId;
+    const isSplit = currentId.split('-');
+    if (isSplit.length > 0) {
+        const splited = isSplit.length - 1;
+        let incrementId = (parseInt(isSplit[splited]) + 1).toString().padStart(5, '0');
+        incrementId = `F-${incrementId}`;
+        return incrementId;
+    }
+    else {
+        let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0');
+        incrementId = `F-${incrementId}`;
+        return incrementId;
+    }
 });
 exports.generate_Faculty_Id = generate_Faculty_Id;
 const generate_Super_Admin_Id = () => __awaiter(void 0, void 0, void 0, function* () {

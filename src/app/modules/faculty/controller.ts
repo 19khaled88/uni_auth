@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from 'express'
 import pick from '../../../shared/pick'
 import { paginationFields } from '../../../shared/constants'
 import { filterFields } from '../student/contants'
-import { studentService } from './service'
+import { facultyService } from './service'
 
-const getAllStudents = async (
+
+  const getAllFaculties = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -13,11 +14,11 @@ const getAllStudents = async (
       const paginationRes = pick(req.query, paginationFields)
       const filter = pick(req.query, filterFields)
      
-      const response = await studentService.getAllStudents(paginationRes, filter)
+      const response = await facultyService.getAllFaculties(paginationRes, filter)
   
       res.status(200).json({
         success: true,
-        message: 'All students retrieved successfully',
+        message: 'All faculties retrieved successfully',
         result: response,
       })
     } catch (error) {
@@ -25,16 +26,16 @@ const getAllStudents = async (
     }
   }
   
-  const singleStudent = async (
+  const singlefaculty = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
     try {
-      const response = await studentService.singleStudent(req.params.id)
+      const response = await facultyService.singleFaculty(req.params.id)
       res.status(200).json({
         success: true,
-        message: 'Single student retrieved successfully',
+        message: 'Single faculty retrieved successfully',
         result: response,
       })
     } catch (error) {
@@ -42,17 +43,17 @@ const getAllStudents = async (
     }
   }
   
-  const deleteStudent = async (
+  const deleteFaculty = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
     try {
-      const response = await studentService.deleteStudent(req.params.id)
+      const response = await facultyService.deleteFaculty(req.params.id)
       
       res.status(200).json({
         success: true,
-        message: 'Student deleted for given ID',
+        message: 'Faculty deleted for given ID',
         result: response === true ? 'Delete successfull' : response,
       })
     } catch (error) {
@@ -60,16 +61,16 @@ const getAllStudents = async (
     }
   }
   
-  const updateStudent = async (
+  const updateFaculty = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
     try {
-      const response = await studentService.updateStudent(req.params.id,req.body)
+      const response = await facultyService.updateFaculty(req.params.id,req.body)
       res.status(200).json({
         success: true,
-        message: 'Student updated for given ID successfully',
+        message: 'Faculty updated for given ID successfully',
         result: response,
       })
     } catch (error) {
@@ -77,9 +78,9 @@ const getAllStudents = async (
     }
   }
 
-  export const studentController ={
-    getAllStudents,
-    singleStudent,
-    deleteStudent,
-    updateStudent
+  export const facultyController ={
+    getAllFaculties,
+    singlefaculty,
+    deleteFaculty,
+    updateFaculty
   }

@@ -63,8 +63,23 @@ const createAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         next(error);
     }
 });
+const createFaculty = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const _c = req.body, { faculty } = _c, userData = __rest(_c, ["faculty"]);
+        const response = yield service_1.userService.createFaculty(faculty, userData);
+        res.status(200).json({
+            success: true,
+            message: 'Faculty created successfully',
+            result: response,
+        });
+    }
+    catch (error) {
+        next(error);
+    }
+});
 exports.userController = {
     createUser,
     createStudent,
     createAdmin,
+    createFaculty
 };

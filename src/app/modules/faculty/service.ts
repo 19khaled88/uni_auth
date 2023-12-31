@@ -1,20 +1,19 @@
 import mongoose from 'mongoose'
-import config from '../../../config'
-import { AcademicSemester } from '../academicSemester/model'
-import { IStudent } from '../student/interface'
-import { Student } from '../student/model'
 import ApiError from '../../../errors/ApiError'
 import httpStatus from 'http-status'
 import { IPagination } from '../../../interfaces/paginationType'
-import { IFilters, studentSearchableFields } from '../student/contants'
+import { IFilters } from '../student/contants'
 import { calculatePagination } from '../../../helpers/paginationCalculate'
 import { IGenericResponse } from '../../../shared/constants'
 import { User } from '../users/model'
+import { IFaculty } from './interface'
+import { Faculty } from './model'
+import { facultySearchableFields } from './contants'
 
-const getAllStudents = async (
+const getAllFaculties = async (
     paginationOptions: IPagination,
     filter: IFilters,
-  ): Promise<IGenericResponse<IStudent[]> | null> => {
+  ): Promise<IGenericResponse<IFaculty[]> | null> => {
     const { page, limit, sortBy, sortOrder } = paginationOptions
     const { searchTerm, ...filters } = filter
   
@@ -24,7 +23,7 @@ const getAllStudents = async (
   
     if (searchTerm) {
       andCondition.push({
-        $or: studentSearchableFields.map((item: string, index: number) => ({
+        $or: facultySearchableFields.map((item: string, index: number) => ({
           [item]: {
             $regex: searchTerm,
             $options: 'i',
@@ -49,8 +48,8 @@ const getAllStudents = async (
       sortCondition[paginate.sortBy] = paginate.sortOrder
     }
   
-    const total = await Student.countDocuments()
-    const response = await Student.find(finalConditions)
+    const total = await Faculty.countDocuments()
+    const response = await Faculty.find(finalConditions)
       .sort(sortCondition)
       .limit(paginate.limit)
       .skip(paginate.skip)
@@ -64,15 +63,15 @@ const getAllStudents = async (
     }
   }
   
-  const singleStudent = async (id: string): Promise<IStudent | null> => {
-    const response = await Student.findById(id).select({ _id: 0 })
+  const singleFaculty = async (id: string): Promise<IFaculty | null> => {
+    const response = await Faculty.findById(id).select({ _id: 0 })
     return response
   }
   
-  const deleteStudent = async (id: string) => {
-    const ifExist = await Student.findById(id)
+  const deleteFaculty = async (id: string) => {
+    const ifExist = await Faculty.findById(id)
     if (!ifExist) {
-      throw new ApiError(400, 'This student does not exist')
+      throw new ApiError(400, 'This Faculty does not exist')
     }
   
     let deleteSuccess = false
@@ -83,7 +82,7 @@ const getAllStudents = async (
   
     try {
       await session.withTransaction(async () => {
-        const res = await Student.findByIdAndDelete([{ _id: id }], { session })
+        const res = await Faculty.findByIdAndDelete([{ _id: id }], { session })
         
         await User.findOneAndDelete({ id: res?.id }, { session })
       })
@@ -100,15 +99,15 @@ const getAllStudents = async (
     return deleteSuccess
   }
   
-  const updateStudent = async (id: string, payload: Partial<IStudent>) => {
-    let isExist = await Student.findById(id)
+  const updateFaculty = async (id: string, payload: Partial<IFaculty>) => {
+    let isExist = await Faculty.findById(id)
     if (!isExist) {
       throw new ApiError(httpStatus.NOT_FOUND, 'This id not found')
     }
   
-    const { name, guardian, ...student } = payload
+    const { name, ...faculty } = payload
   
-    let updatingStudentData: Partial<IStudent> = { ...student }
+    let updatingFacultyData: Partial<IFaculty> = { ...faculty }
   
     // Update the name properties if they exist in the payload
   
@@ -122,33 +121,26 @@ const getAllStudents = async (
       // });
       Object.keys(name).forEach(key => {
         const nameKey = `name.${key}`
-        ;(updatingStudentData as any)[nameKey] = name[key as keyof typeof name]
+        ;(updatingFacultyData as any)[nameKey] = name[key as keyof typeof name]
       })
     }
   
-    if (guardian && Object.keys(guardian).length > 0) {
-      Object.keys(guardian).forEach(key => {
-        const guardianKey = `guardian.${key}`
-        ;(updatingStudentData as any)[guardianKey] =
-          guardian[key as keyof typeof guardian]
-      })
-    }
   
-    const updatedStudent = await Student.findByIdAndUpdate(
+    const updatedFaculty = await Faculty.findByIdAndUpdate(
       id,
-      updatingStudentData,
+      updatingFacultyData,
       {
         new: true, // Return the updated document
         runValidators: true, // Run validators for updates
       },
     )
   
-    return updatedStudent
+    return updatedFaculty
   }
 
-  export const studentService ={
-    getAllStudents,
-    singleStudent,
-    deleteStudent,
-    updateStudent
+  export const facultyService ={
+    getAllFaculties,
+    singleFaculty,
+    deleteFaculty,
+    updateFaculty
   }

@@ -1,9 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
 import { userService } from './service'
-import { Student } from '../student/model'
-import pick from '../../../shared/pick'
-import { paginationFields } from '../../../shared/constants'
-import { filterFields } from '../student/contants'
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -54,12 +50,24 @@ const createAdmin = async (
   }
 }
 
-
+const createFaculty=async(req: Request, res: Response, next: NextFunction)=>{
+  try {
+    const { faculty, ...userData } = req.body
+    const response = await userService.createFaculty(faculty, userData)
+    res.status(200).json({
+      success: true,
+      message: 'Faculty created successfully',
+      result: response,
+    })
+  } catch (error: any) {
+    next(error)
+  }
+}
 
 
 export const userController = {
   createUser,
   createStudent,
   createAdmin,
-  
+  createFaculty
 }

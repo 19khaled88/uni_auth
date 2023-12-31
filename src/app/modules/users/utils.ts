@@ -97,12 +97,23 @@ export const generate_Admin_Id=async(academicSemester:IAcademicSemester | null)=
 }
 
 
-export const generate_Faculty_Id=async()=>{
+export const generate_Faculty_Id=async(academicSemester:IAcademicSemester | null)=>{
     const currentId = (await findLastFacultyId() || (0).toString().padStart(5, '0')) 
-    let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0')
-    incrementId = `F-${incrementId}`
+    const isSplit = currentId.split('-')
+
+    if(isSplit.length > 0){
+        const splited = isSplit.length - 1
+        let incrementId = (parseInt(isSplit[splited]) + 1).toString().padStart(5, '0')
+        incrementId = `F-${incrementId}` 
+
+        return incrementId
+    }else{
+        let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0')
+        incrementId = `F-${incrementId}`
+        
+        return incrementId
+    }
     
-    return incrementId
 }
 
 
