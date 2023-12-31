@@ -5,22 +5,24 @@ import userRouter from './app/modules/users/route'
 import academicSemesterRouter from './app/modules/academicSemester/route'
 import academicFacultyRoute from './app/modules/academicFaculty/route'
 import academicDepartmentRoute from './app/modules/academicDepartment/route'
+import authRoute from './app/modules/auth/route'
 import httpStatus from 'http-status'
-
+import cookieParser from 'cookie-parser'
 const app: Application = express()
 
 app.use(cors())
 
 //parser
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 //routes
 app.use('/api/v1/user',userRouter)
 app.use('/api/v1/academicSemester',academicSemesterRouter)
 app.use('/api/v1/academicFaculty',academicFacultyRoute)
 app.use('/api/v1/academicDepartment',academicDepartmentRoute)
+app.use('/api/v1/auth',authRoute)
 
 
 app.get('/', (req: Request, res: Response) => {

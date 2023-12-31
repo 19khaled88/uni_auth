@@ -1,17 +1,15 @@
+import httpStatus from 'http-status'
 import mongoose from 'mongoose'
 import config from '../../../config'
+import ApiError from '../../../errors/ApiError'
 import { AcademicSemester } from '../academicSemester/model'
+import { IAdmin } from '../admin/interface'
+import { Admin } from '../admin/model'
 import { IStudent } from '../student/interface'
+import { Student } from '../student/model'
 import { IUser } from './interfaces'
 import { User } from './model'
-import { generateUserId, generate_Student_Id } from './utils'
-import { Student } from '../student/model'
-import ApiError from '../../../errors/ApiError'
-import httpStatus from 'http-status'
-import { IPagination } from '../../../interfaces/paginationType'
-import { IFilters, studentSearchableFields } from '../student/contants'
-import { calculatePagination } from '../../../helpers/paginationCalculate'
-import { IGenericResponse } from '../../../shared/constants'
+import { generateUserId, generate_Admin_Id, generate_Student_Id } from './utils'
 
 const createUser = async (user: IUser): Promise<IUser | null> => {
   const id = await generateUserId()
@@ -25,7 +23,7 @@ const createUser = async (user: IUser): Promise<IUser | null> => {
   }
 
   if (!user.role) {
-    user.role = config.default_role as string
+    user.role = config.default_student_role as string
   }
 
   const res = await User.create(user)
@@ -46,7 +44,7 @@ const createStudent = async (
 
   //user role set
   if (!userData.role) {
-    userData.role = config.default_role as string
+    userData.role = config.default_student_role as string
   }
 
   //get academic semester info
@@ -110,146 +108,83 @@ const createStudent = async (
   return newUserAllData
 }
 
-const getAllStudents = async (
-  paginationOptions: IPagination,
-  filter: IFilters,
-): Promise<IGenericResponse<IStudent[]> | null> => {
-  const { page, limit, sortBy, sortOrder } = paginationOptions
-  const { searchTerm, ...filters } = filter
-
-  const paginate = calculatePagination({ page, limit, sortBy, sortOrder })
-
-  const andCondition = []
-
-  if (searchTerm) {
-    andCondition.push({
-      $or: studentSearchableFields.map((item: string, index: number) => ({
-        [item]: {
-          $regex: searchTerm,
-          $options: 'i',
-        },
-      })),
-    })
+// with transaction and rollback way
+const createAdmin = async (
+  admin: IAdmin,
+  userData: IUser,
+): Promise<IUser | null> => {
+  if (!userData.password) {
+    userData.password = config.default_admin_password as string
   }
 
-  if (Object.keys(filters).length) {
-    andCondition.push({
-      $and: Object.entries(filters).map(([field, value]) => ({
-        [field]: value,
-      })),
-    })
+  //user role set
+  if (!userData.role) {
+    userData.role = config.default_admin_role as string
   }
 
-  const finalConditions = andCondition.length > 0 ? { $and: andCondition } : {}
+  //get academic semester info
+  const academicSemesterInfo = await AcademicSemester.findById(
+    admin.academicSemester,
+  )
 
-  const sortCondition: { [key: string | number]: any } = {}
-
-  if (paginate.sortBy && paginate.sortOrder) {
-    sortCondition[paginate.sortBy] = paginate.sortOrder
-  }
-
-  const total = await Student.countDocuments()
-  const response = await Student.find(finalConditions)
-    .sort(sortCondition)
-    .limit(paginate.limit)
-    .skip(paginate.skip)
-  return {
-    meta: {
-      page: paginate.page,
-      limit: paginate.limit,
-      total,
-    },
-    data: response,
-  }
-}
-
-const singleStudent = async (id: string): Promise<IStudent | null> => {
-  const response = await Student.findById(id).select({ _id: 0 })
-  return response
-}
-
-const deleteStudent = async (id: string) => {
-  const ifExist = await Student.findById(id)
-  if (!ifExist) {
-    throw new ApiError(400, 'This student does not exist')
-  }
-
-  let deleteSuccess = false
+  let newUserAllData = null
 
   // transaction & rollback
   const session = await mongoose.startSession()
-  //  session.startTransaction()
-
+  session.startTransaction()
   try {
-    await session.withTransaction(async () => {
-      const res = await Student.findByIdAndDelete([{ _id: id }], { session })
-      
-      await User.findOneAndDelete({ id: res?.id }, { session })
-    })
+    //generate student id
+    const id = await generate_Admin_Id(academicSemesterInfo)
+    userData.id = id
+    admin.id = id
 
-    deleteSuccess = true
+    const newAdmin = await Admin.create([admin], { session })
+
+    if (!newAdmin.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create admin')
+    }
+
+    //set student's _id into user's student reference
+    userData.admin = newAdmin[0]._id
+
+    const newUser = await User.create([userData], { session })
+
+    if (!newUser.length) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Failed to create user')
+    }
+
+    newUserAllData = newUser[0]
+
+    await session.commitTransaction()
+    await session.endSession()
   } catch (error) {
-    
+    await session.abortTransaction()
     await session.endSession()
     throw error
-  } finally {
-    await session.endSession()
   }
 
-  return deleteSuccess
-}
-
-const updateStudent = async (id: string, payload: Partial<IStudent>) => {
-  let isExist = await Student.findById(id)
-  if (!isExist) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'This id not found')
-  }
-
-  const { name, guardian, ...student } = payload
-
-  let updatingStudentData: Partial<IStudent> = { ...student }
-
-  // Update the name properties if they exist in the payload
-
-  // if (name && Object.keys(name).length > 0) {
-  //   updatingStudentData.name = { ...isExist.name, ...name };
-  // }
-
-  if (name && Object.keys(name).length > 0) {
-    // Object.keys(name).forEach((key) => {
-    //   updatingStudentData['name'][key] = name[key];
-    // });
-    Object.keys(name).forEach(key => {
-      const nameKey = `name.${key}`
-      ;(updatingStudentData as any)[nameKey] = name[key as keyof typeof name]
+  if (newUserAllData) {
+    newUserAllData = await User.findOne({ id: newUserAllData.id }).populate({
+      path: 'admin',
+      populate: [
+        {
+          path: 'academicFaculty',
+        },
+        {
+          path: 'academicDepartment',
+        },
+        {
+          path: 'academicSemester',
+        },
+      ],
     })
   }
 
-  if (guardian && Object.keys(guardian).length > 0) {
-    Object.keys(guardian).forEach(key => {
-      const guardianKey = `guardian.${key}`
-      ;(updatingStudentData as any)[guardianKey] =
-        guardian[key as keyof typeof guardian]
-    })
-  }
-
-  const updatedStudent = await Student.findByIdAndUpdate(
-    id,
-    updatingStudentData,
-    {
-      new: true, // Return the updated document
-      runValidators: true, // Run validators for updates
-    },
-  )
-
-  return updatedStudent
+  return newUserAllData
 }
 
 export const userService = {
   createUser,
   createStudent,
-  singleStudent,
-  getAllStudents,
-  deleteStudent,
-  updateStudent,
+  createAdmin,
 }

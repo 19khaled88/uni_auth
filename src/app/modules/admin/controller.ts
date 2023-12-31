@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from 'express'
 import pick from '../../../shared/pick'
 import { paginationFields } from '../../../shared/constants'
 import { filterFields } from '../student/contants'
-import { studentService } from './service'
+import { adminService } from './service'
 
-const getAllStudents = async (
+
+const getAllAdmins = async (
     req: Request,
     res: Response,
     next: NextFunction,
@@ -13,7 +14,7 @@ const getAllStudents = async (
       const paginationRes = pick(req.query, paginationFields)
       const filter = pick(req.query, filterFields)
      
-      const response = await studentService.getAllStudents(paginationRes, filter)
+      const response = await adminService.getAllAdmins(paginationRes, filter)
   
       res.status(200).json({
         success: true,
@@ -25,13 +26,13 @@ const getAllStudents = async (
     }
   }
   
-  const singleStudent = async (
+  const singleAdmin = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
     try {
-      const response = await studentService.singleStudent(req.params.id)
+      const response = await adminService.singleAdmin(req.params.id)
       res.status(200).json({
         success: true,
         message: 'Single student retrieved successfully',
@@ -42,13 +43,13 @@ const getAllStudents = async (
     }
   }
   
-  const deleteStudent = async (
+  const deleteAdmin = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
     try {
-      const response = await studentService.deleteStudent(req.params.id)
+      const response = await adminService.deleteAdmin(req.params.id)
       
       res.status(200).json({
         success: true,
@@ -60,13 +61,13 @@ const getAllStudents = async (
     }
   }
   
-  const updateStudent = async (
+  const updateAdmin = async (
     req: Request,
     res: Response,
     next: NextFunction,
   ) => {
     try {
-      const response = await studentService.updateStudent(req.params.id,req.body)
+      const response = await adminService.updateAdmin(req.params.id,req.body)
       res.status(200).json({
         success: true,
         message: 'Student updated for given ID successfully',
@@ -77,9 +78,9 @@ const getAllStudents = async (
     }
   }
 
-  export const studentController ={
-    getAllStudents,
-    singleStudent,
-    deleteStudent,
-    updateStudent
+  export const adminController ={
+    getAllAdmins,
+    singleAdmin,
+    deleteAdmin,
+    updateAdmin
   }

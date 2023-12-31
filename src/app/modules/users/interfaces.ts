@@ -1,5 +1,6 @@
-import { Schema, Types } from "mongoose"
+import { Model, Schema, Types } from "mongoose"
 import { IStudent } from "../student/interface"
+import { IAdmin } from "../admin/interface"
 
 //interface >> schema >> model
 export type IUser = {
@@ -9,5 +10,15 @@ export type IUser = {
   student:Types.ObjectId | IStudent
   // student:Schema.Types.ObjectId | IStudent
   faculty:Schema.Types.ObjectId
-  admin:Schema.Types.ObjectId
+  admin:Types.ObjectId | IAdmin
 }
+
+export type IUserMothods ={
+  isUserExist(id:string):Promise<Partial<IUser> | null>;
+  isPasswordMatched(
+    plainPassword:string,
+    databasePassword:string
+  ):Promise<boolean>
+}
+
+export type UserModel = Model<IUser, Record<string, unknown>,IUserMothods>

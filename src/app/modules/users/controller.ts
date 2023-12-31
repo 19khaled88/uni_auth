@@ -36,84 +36,27 @@ const createStudent = async (
   }
 }
 
-const getAllStudents = async (
+const createAdmin = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
   try {
-    const paginationRes = pick(req.query, paginationFields)
-    const filter = pick(req.query, filterFields)
-
-    const response = await userService.getAllStudents(paginationRes, filter)
-
+    const { admin, ...userData } = req.body
+    const response = await userService.createAdmin(admin, userData)
     res.status(200).json({
       success: true,
-      message: 'All students retrieved successfully',
+      message: 'Admin created successfully',
       result: response,
     })
-  } catch (error) {
+  } catch (error: any) {
     next(error)
   }
 }
 
-const singleStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const response = await userService.singleStudent(req.params.id)
-    res.status(200).json({
-      success: true,
-      message: 'Single student retrieved successfully',
-      result: response,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-const deleteStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const response = await userService.deleteStudent(req.params.id)
-    
-    res.status(200).json({
-      success: true,
-      message: 'Student deleted for given ID',
-      result: response === true ? 'Delete successfull' : response,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
-
-const updateStudent = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const response = await userService.updateStudent(req.params.id,req.body)
-    res.status(200).json({
-      success: true,
-      message: 'Student updated for given ID successfully',
-      result: response,
-    })
-  } catch (error) {
-    next(error)
-  }
-}
 
 export const userController = {
   createUser,
   createStudent,
-  singleStudent,
-  getAllStudents,
-  deleteStudent,
-  updateStudent
+  createAdmin
 }

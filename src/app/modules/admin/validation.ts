@@ -1,21 +1,12 @@
-import { string, z } from "zod";
-import { bloodGroup, gender } from "../student/contants";
+import { z } from "zod"
+import { bloodGroup, gender } from "./contants"
 
 
-const createUserZodSchema = z.object({
-    body:z.object({
-        role:z.string({
-            required_error:'user role is required'
-        }).optional(),
-        password:z.string().optional()
-    })
-})
-
-const createStudentZodSchema=z.object({
+const createAdminZodSchema=z.object({
     body:z.object({
         password:z.string().optional(),
 
-        student:z.object({
+        admin:z.object({
             name:z.object({
                 firstName:z.string({
                     required_error:'First name is required'
@@ -51,29 +42,7 @@ const createStudentZodSchema=z.object({
             bloodGroup:z.enum([...bloodGroup]as [string, ...string[]],{
                 required_error:'bloodGroup is required'
             }).optional(),
-            guardian:z.object({
-                fatherName:z.string({
-                    required_error:'fatherName is required'
-                }),
-                fatherOccupation:z.string({
-                    required_error:'fatherOccupation is required'
-                }),
-                fatherContactNo:z.string({
-                    required_error:'fatherContactNo is required'
-                }),
-                motherName:z.string({
-                    required_error:'motherName is required'
-                }),
-                motherOccupation:z.string({
-                    required_error:'motherOccupation is required'
-                }),
-                motherContactNo:z.string({
-                    required_error:'motherContactNo is required'
-                }),
-                address:z.string({
-                    required_error:'address is required'
-                })
-            }),
+           
             profileImage:z.string({
                 required_error:'profileImage is required'
             }).optional(),
@@ -91,9 +60,9 @@ const createStudentZodSchema=z.object({
     })
 })
 
-const updateStudnetZodSchema=z.object({
+const updateAdminZodSchema=z.object({
     body:z.object({
-        student:z.object({
+        admin:z.object({
             name:z.object({
                 firstName:z.string().optional(),
                 middleName:z.string().optional(),
@@ -125,8 +94,8 @@ const updateStudnetZodSchema=z.object({
     })
 })
 
-export const UserZodValidation ={
-    createUserZodSchema,
-    createStudentZodSchema,
-    updateStudnetZodSchema
+export const AdminZodValidation ={
+
+    createAdminZodSchema,
+    updateAdminZodSchema
 }

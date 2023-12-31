@@ -20,6 +20,15 @@ export const findLastStudentId=async():Promise<string | undefined>=>{
     
     return lastStudent?.id
 }
+
+export const findLastAdminId=async():Promise<string | undefined>=>{
+    const lastAdmin = await User.findOne({role:'admin'},{id:1, _id:0}).sort({
+        createdAt: -1
+    }).lean();
+
+    return lastAdmin?.id
+}
+
 export const findLastFacultyId=async():Promise<string | undefined>=>{
     const lastStudent = await User.findOne({role:'faculty'},{id:1, _id:0}).sort({
         createdAt: -1
@@ -28,13 +37,6 @@ export const findLastFacultyId=async():Promise<string | undefined>=>{
     return lastStudent?.id
 }
 
-export const findLastAdminId=async():Promise<string | undefined>=>{
-    const lastStudent = await User.findOne({role:'admin'},{id:1, _id:0}).sort({
-        createdAt: -1
-    }).lean();
-
-    return lastStudent?.id
-}
 export const findLastSuperAdminId=async():Promise<string | undefined>=>{
     const lastStudent = await User.findOne({role:'super_admin'},{id:1, _id:0}).sort({
         createdAt: -1
@@ -76,6 +78,25 @@ export const generate_Student_Id =async(academicSemester:IAcademicSemester | nul
     
 }
 
+export const generate_Admin_Id=async(academicSemester:IAcademicSemester | null)=>{
+    const currentId = (await findLastAdminId() || (0).toString().padStart(5, '0')) 
+    const isSplit = currentId.split('-')
+
+    if(isSplit.length > 0){
+        const splited = isSplit.length - 1
+        let incrementId = (parseInt(isSplit[splited]) + 1).toString().padStart(5, '0')
+        incrementId = `A-${incrementId}`
+        
+        return incrementId
+    }else{
+        let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0')
+        incrementId = `A-${incrementId}`
+
+        return incrementId
+    }
+}
+
+
 export const generate_Faculty_Id=async()=>{
     const currentId = (await findLastFacultyId() || (0).toString().padStart(5, '0')) 
     let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0')
@@ -84,13 +105,7 @@ export const generate_Faculty_Id=async()=>{
     return incrementId
 }
 
-export const generate_Admin_Id=async()=>{
-    const currentId = (await findLastAdminId() || (0).toString().padStart(5, '0')) 
-    let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0')
-    incrementId = `A-${incrementId}`
-    
-    return incrementId
-}
+
 export const generate_Super_Admin_Id=async()=>{
     const currentId = (await findLastSuperAdminId() || (0).toString().padStart(5, '0')) 
     let incrementId = (parseInt(currentId) + 1).toString().padStart(5, '0')

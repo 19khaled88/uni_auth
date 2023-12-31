@@ -12,16 +12,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.studentController = void 0;
+exports.adminController = void 0;
 const pick_1 = __importDefault(require("../../../shared/pick"));
 const constants_1 = require("../../../shared/constants");
 const contants_1 = require("../student/contants");
 const service_1 = require("./service");
-const getAllStudents = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllAdmins = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const paginationRes = (0, pick_1.default)(req.query, constants_1.paginationFields);
         const filter = (0, pick_1.default)(req.query, contants_1.filterFields);
-        const response = yield service_1.studentService.getAllStudents(paginationRes, filter);
+        const response = yield service_1.adminService.getAllAdmins(paginationRes, filter);
         res.status(200).json({
             success: true,
             message: 'All students retrieved successfully',
@@ -32,9 +32,9 @@ const getAllStudents = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         next(error);
     }
 });
-const singleStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const singleAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield service_1.studentService.singleStudent(req.params.id);
+        const response = yield service_1.adminService.singleAdmin(req.params.id);
         res.status(200).json({
             success: true,
             message: 'Single student retrieved successfully',
@@ -45,9 +45,9 @@ const singleStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         next(error);
     }
 });
-const deleteStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const deleteAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield service_1.studentService.deleteStudent(req.params.id);
+        const response = yield service_1.adminService.deleteAdmin(req.params.id);
         res.status(200).json({
             success: true,
             message: 'Student deleted for given ID',
@@ -58,9 +58,9 @@ const deleteStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         next(error);
     }
 });
-const updateStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const updateAdmin = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const response = yield service_1.studentService.updateStudent(req.params.id, req.body);
+        const response = yield service_1.adminService.updateAdmin(req.params.id, req.body);
         res.status(200).json({
             success: true,
             message: 'Student updated for given ID successfully',
@@ -71,9 +71,9 @@ const updateStudent = (req, res, next) => __awaiter(void 0, void 0, void 0, func
         next(error);
     }
 });
-exports.studentController = {
-    getAllStudents,
-    singleStudent,
-    deleteStudent,
-    updateStudent
+exports.adminController = {
+    getAllAdmins,
+    singleAdmin,
+    deleteAdmin,
+    updateAdmin
 };

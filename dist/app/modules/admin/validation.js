@@ -1,20 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserZodValidation = void 0;
+exports.AdminZodValidation = void 0;
 const zod_1 = require("zod");
-const contants_1 = require("../student/contants");
-const createUserZodSchema = zod_1.z.object({
-    body: zod_1.z.object({
-        role: zod_1.z.string({
-            required_error: 'user role is required'
-        }).optional(),
-        password: zod_1.z.string().optional()
-    })
-});
-const createStudentZodSchema = zod_1.z.object({
+const contants_1 = require("./contants");
+const createAdminZodSchema = zod_1.z.object({
     body: zod_1.z.object({
         password: zod_1.z.string().optional(),
-        student: zod_1.z.object({
+        admin: zod_1.z.object({
             name: zod_1.z.object({
                 firstName: zod_1.z.string({
                     required_error: 'First name is required'
@@ -50,29 +42,6 @@ const createStudentZodSchema = zod_1.z.object({
             bloodGroup: zod_1.z.enum([...contants_1.bloodGroup], {
                 required_error: 'bloodGroup is required'
             }).optional(),
-            guardian: zod_1.z.object({
-                fatherName: zod_1.z.string({
-                    required_error: 'fatherName is required'
-                }),
-                fatherOccupation: zod_1.z.string({
-                    required_error: 'fatherOccupation is required'
-                }),
-                fatherContactNo: zod_1.z.string({
-                    required_error: 'fatherContactNo is required'
-                }),
-                motherName: zod_1.z.string({
-                    required_error: 'motherName is required'
-                }),
-                motherOccupation: zod_1.z.string({
-                    required_error: 'motherOccupation is required'
-                }),
-                motherContactNo: zod_1.z.string({
-                    required_error: 'motherContactNo is required'
-                }),
-                address: zod_1.z.string({
-                    required_error: 'address is required'
-                })
-            }),
             profileImage: zod_1.z.string({
                 required_error: 'profileImage is required'
             }).optional(),
@@ -88,9 +57,9 @@ const createStudentZodSchema = zod_1.z.object({
         })
     })
 });
-const updateStudnetZodSchema = zod_1.z.object({
+const updateAdminZodSchema = zod_1.z.object({
     body: zod_1.z.object({
-        student: zod_1.z.object({
+        admin: zod_1.z.object({
             name: zod_1.z.object({
                 firstName: zod_1.z.string().optional(),
                 middleName: zod_1.z.string().optional(),
@@ -120,8 +89,7 @@ const updateStudnetZodSchema = zod_1.z.object({
         })
     })
 });
-exports.UserZodValidation = {
-    createUserZodSchema,
-    createStudentZodSchema,
-    updateStudnetZodSchema
+exports.AdminZodValidation = {
+    createAdminZodSchema,
+    updateAdminZodSchema
 };
